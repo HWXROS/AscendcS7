@@ -1,0 +1,53 @@
+[
+    {
+        "op": "Fmax,
+        "language": "cpp",
+        "input_desc": [
+            {
+                "name": "input",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": ["bool","float32","float16","int32","int8","int64","int16","uint8"
+                ]
+            },
+            {
+                "name": "other",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "bool",
+                    "float32",
+                    "float16",
+                    "int32",
+                    "int8",
+                    "int64",
+                    "int16",
+                    "uint8"
+                ]
+            }
+        ],
+        "output_desc": [
+            {
+                "name": "result",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "bool",
+                    "float32",
+                    "float16",
+                    "int32",
+                    "int8",
+                    "int64",
+                    "int16",
+                    "uint8"
+                ]
+            }
+        ]
+    }
+]
