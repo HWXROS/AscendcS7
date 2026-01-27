@@ -1,0 +1,58 @@
+[
+    {
+        "op": "PdistGrad",
+        "language": "cpp",
+        "input_desc": [
+            {
+                "name": "grad",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": ["float32"
+                ]
+            },
+            {
+                "name": "input",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float32"
+                ]
+            },
+            {
+                "name": "pdist_ouput",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float32"
+                ]
+            }
+        ],
+        "attr_desc": [
+            {
+                "name": "p",
+                "param_type": "required",
+                "type": "float",
+                "default_value": 2.0
+            }
+        ]
+        ,
+        "output_desc": [
+            {
+                "name": "result",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float32"
+                ]
+            }
+        ]
+    }
+]
