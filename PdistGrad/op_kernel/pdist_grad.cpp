@@ -1,6 +1,5 @@
 #include "kernel_operator.h"
 
-<<<<<<< HEAD
 using namespace AscendC;
 
 class PdistGradKernel {
@@ -307,9 +306,4 @@ extern "C" __global__ __aicore__ void pdist_grad(GM_ADDR grad, GM_ADDR input, GM
                 tiling_data.totalDist, tiling_data.tilingKey, tiling_data.blocknum,
                 tiling_data.blockSize);
     kernel.Process();
-=======
-extern "C" __global__ __aicore__ void pdist_grad(GM_ADDR grad, GM_ADDR input, GM_ADDR pdist_ouput, GM_ADDR result, GM_ADDR workspace, GM_ADDR tiling) {
-    GET_TILING_DATA(tiling_data, tiling);
-    // TODO: user kernel impl
->>>>>>> 41a96658ee2cc44167b5b073209842e137ceacde
 }

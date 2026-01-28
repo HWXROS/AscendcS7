@@ -3,7 +3,6 @@
 #include "register/op_def_registry.h"
 
 
-<<<<<<< HEAD
 
 //  自动选择分块大小
 inline uint32_t GetOptimalBlockSize(uint32_t d) {
@@ -13,15 +12,12 @@ inline uint32_t GetOptimalBlockSize(uint32_t d) {
 }
 
 
-=======
->>>>>>> 41a96658ee2cc44167b5b073209842e137ceacde
 namespace optiling {
 static ge::graphStatus TilingFunc(gert::TilingContext* context)
 {
 
   PdistGradTilingData tiling;
   const gert::StorageShape* x1_shape = context->GetInputShape(0);
-<<<<<<< HEAD
   float p = *context->GetAttrs()->GetFloat(0); // 0: euclidean, 1: cityblock 2
 
  uint32_t n = x1_shape->GetStorageShape().GetDim(0);
@@ -39,13 +35,6 @@ static ge::graphStatus TilingFunc(gert::TilingContext* context)
   tiling.SetBlockSize(blockSize);
   tiling.SetBlockNum(blockNum);
   //
-=======
-  int32_t data_sz = 1;
-  for (int i = 0; i < x1_shape->GetStorageShape().GetDimNum(); i++)
-    data_sz *= x1_shape->GetStorageShape().GetDim(i);
-  tiling.set_size(data_sz);
-  context->SetBlockDim(8);
->>>>>>> 41a96658ee2cc44167b5b073209842e137ceacde
   tiling.SaveToBuffer(context->GetRawTilingData()->GetData(), context->GetRawTilingData()->GetCapacity());
   context->GetRawTilingData()->SetDataSize(tiling.GetDataSize());
 
@@ -101,11 +90,7 @@ public:
 
         this->AICore()
             .SetTiling(optiling::TilingFunc);
-<<<<<<< HEAD
         this->AICore().AddConfig("ascend910b");
-=======
-        this->AICore().AddConfig("ascend910");
->>>>>>> 41a96658ee2cc44167b5b073209842e137ceacde
 
     }
 };
