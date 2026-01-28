@@ -27,7 +27,11 @@
                 },
                 "ASCEND_COMPUTE_UNIT": {
                     "type": "STRING",
+<<<<<<< HEAD
                     "value": "ascend910b"
+=======
+                    "value": "ascend910"
+>>>>>>> 41a96658ee2cc44167b5b073209842e137ceacde
                 },
                 "ENABLE_TEST": {
                     "type": "BOOL",
