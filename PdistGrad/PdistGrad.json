@@ -23,7 +23,7 @@
                 ]
             },
             {
-                "name": "pdist_ouput",
+                "name": "pdist_output",
                 "param_type": "required",
                 "format": [
                     "ND"

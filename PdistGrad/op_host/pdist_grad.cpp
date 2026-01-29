@@ -3,7 +3,6 @@
 #include "register/op_def_registry.h"
 
 
-
 //  自动选择分块大小
 inline uint32_t GetOptimalBlockSize(uint32_t d) {
     if (d <= 256) return d;        // 小数据，一次性处理
@@ -16,29 +15,29 @@ namespace optiling {
 static ge::graphStatus TilingFunc(gert::TilingContext* context)
 {
 
-  PdistGradTilingData tiling;
-  const gert::StorageShape* x1_shape = context->GetInputShape(0);
-  float p = *context->GetAttrs()->GetFloat(0); // 0: euclidean, 1: cityblock 2
+    PdistGradTilingData tiling;
+    const gert::StorageShape* x1_shape = context->GetInputShape(0);
+    float p = *context->GetAttrs()->GetFloat(0); // 0: euclidean, 1: cityblock 2
+    uint32_t n = x1_shape->GetStorageShape().GetDim(0);
+    uint32_t d = x1_shape->GetStorageShape().GetDim(1);
+    uint32_t blockSize = GetOptimalBlockSize(d);
+    uint32_t blockNum = (n + blockSize - 1) / blockSize;
+    uint32_t totalDist = n * (n - 1) / 2;
+    // 预计算缩放因子=gradValue/distance^(p-1)
 
- uint32_t n = x1_shape->GetStorageShape().GetDim(0);
- uint32_t d = x1_shape->GetStorageShape().GetDim(1);
- uint32_t blockSize = GetOptimalBlockSize(d);
- uint32_t blockNum = (n + blockSize - 1) / blockSize;
- uint32_t totalDist = n * (n - 1) / 2;
+    context->SetBlockDim(8);
+    //
+    tiling.set_totalDist(totalDist);
+    tiling.set_n(n);
+    tiling.set_d(d);
+    tiling.set_p(p);
+    tiling.set_blockSize(blockSize);
+    tiling.set_blockNum(blockNum);
+    //
+    tiling.SaveToBuffer(context->GetRawTilingData()->GetData(), context->GetRawTilingData()->GetCapacity());
+    context->GetRawTilingData()->SetDataSize(tiling.GetDataSize());
 
-  context->SetBlockDim(8);
-  //
-  tiling.SetTotalDist(totalDist);
-  tiling.SetN(n);
-  tiling.SetD(d);
-  tiling.SetP(p);
-  tiling.SetBlockSize(blockSize);
-  tiling.SetBlockNum(blockNum);
-  //
-  tiling.SaveToBuffer(context->GetRawTilingData()->GetData(), context->GetRawTilingData()->GetCapacity());
-  context->GetRawTilingData()->SetDataSize(tiling.GetDataSize());
-
-  return ge::GRAPH_SUCCESS;
+    return ge::GRAPH_SUCCESS;
 }
 }
 
@@ -75,7 +74,7 @@ public:
             .DataType({ge::DT_FLOAT})
             .Format({ge::FORMAT_ND})
             .UnknownShapeFormat({ge::FORMAT_ND});
-        this->Input("pdist_ouput")
+        this->Input("pdist_output")
             .ParamType(REQUIRED)
             .DataType({ge::DT_FLOAT})
             .Format({ge::FORMAT_ND})
@@ -85,6 +84,7 @@ public:
             .DataType({ge::DT_FLOAT})
             .Format({ge::FORMAT_ND})
             .UnknownShapeFormat({ge::FORMAT_ND});
+        this->Attr("p").Float();  // 更明确的定义方式
 
         this->SetInferShape(ge::InferShape).SetInferDataType(ge::InferDataType);
 
