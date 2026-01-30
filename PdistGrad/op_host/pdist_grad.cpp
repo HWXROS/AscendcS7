@@ -5,7 +5,9 @@
 
 //  自动选择分块大小
 inline uint32_t GetOptimalBlockSize(uint32_t d) {
-    if (d <= 256) return d;        // 小数据，一次性处理
+    if (d <= 64) return 32;
+    else if (d <= 128) return 64; 
+    else if (d <= 256) return 128;        // 小数据，一次性处理
     else if (d <= 1024) return 256; // 中等数据
     else return 512;               // 大数据，d可达10000
 }
@@ -16,7 +18,7 @@ static ge::graphStatus TilingFunc(gert::TilingContext* context)
 {
 
     PdistGradTilingData tiling;
-    const gert::StorageShape* x1_shape = context->GetInputShape(0);
+    const gert::StorageShape* x1_shape = context->GetInputShape(1);
     float p = *context->GetAttrs()->GetFloat(0); // 0: euclidean, 1: cityblock 2
     uint32_t n = x1_shape->GetStorageShape().GetDim(0);
     uint32_t d = x1_shape->GetStorageShape().GetDim(1);
@@ -25,7 +27,7 @@ static ge::graphStatus TilingFunc(gert::TilingContext* context)
     uint32_t totalDist = n * (n - 1) / 2;
     // 预计算缩放因子=gradValue/distance^(p-1)
 
-    context->SetBlockDim(8);
+    context->SetBlockDim(blockNum);
     //
     tiling.set_totalDist(totalDist);
     tiling.set_n(n);
@@ -45,7 +47,7 @@ static ge::graphStatus TilingFunc(gert::TilingContext* context)
 namespace ge {
 static ge::graphStatus InferShape(gert::InferShapeContext* context)
 {
-    const gert::Shape* x1_shape = context->GetInputShape(0);
+    const gert::Shape* x1_shape = context->GetInputShape(1);
     gert::Shape* y_shape = context->GetOutputShape(0);
     *y_shape = *x1_shape;
     return GRAPH_SUCCESS;
